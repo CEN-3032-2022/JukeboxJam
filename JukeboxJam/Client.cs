@@ -33,6 +33,7 @@ public class JukeboxClient
     private static volatile bool fullyDownloaded;
     private VolumeWaveProvider16 volumeProvider;
     IMp3FrameDecompressor decompressor = null;
+    Stream iStream = File.OpenRead("bensound-sunny.mp3"); // hardcoded, update path for your own mp3
     //private HttpWebRequest request;
     //byte[] buffer = File.ReadAllBytes("bensound-sunny.mp3");
 
@@ -57,11 +58,10 @@ public class JukeboxClient
 
         try
         {
-            // tests
-            FileStream iStream = new FileStream("bensound-sunny.mp3", FileMode.Open, FileAccess.Read, FileShare.Read);
             var readFullyStream = new ReadFullyStream(iStream);
             do
             {
+                Thread.Sleep(10);
                 if (IsBufferNearlyFull)
                 {
                     Console.WriteLine("Buffer is full!");
@@ -168,38 +168,42 @@ public class JukeboxClient
 
     private void timer1_Tick()
     {
-        if (playbackState != StreamingPlaybackState.Stopped)
+        while (true)
         {
-            if (waveOut == null && bufferedWaveProvider != null)
+            if (playbackState != StreamingPlaybackState.Stopped)
             {
-                //Debug.WriteLine("Creating WaveOut Device");
-                waveOut = CreateWaveOut();
-                waveOut.PlaybackStopped += OnPlaybackStopped;
-                volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
-                volumeProvider.Volume = 70;
-                waveOut.Init(volumeProvider);
-                //progressBarBuffer.Maximum = (int)bufferedWaveProvider.BufferDuration.TotalMilliseconds;
-            }
-            else if (bufferedWaveProvider != null)
-            {
-                var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
-                //ShowBufferState(bufferedSeconds);
-                // make it stutter less if we buffer up a decent amount before playing
-                if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
+                if (waveOut == null && bufferedWaveProvider != null)
                 {
-                    Pause();
+                    //Debug.WriteLine("Creating WaveOut Device");
+                    waveOut = CreateWaveOut();
+                    waveOut.PlaybackStopped += OnPlaybackStopped;
+                    volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
+                    volumeProvider.Volume = 2;
+                    waveOut.Init(volumeProvider);
+                    //progressBarBuffer.Maximum = (int)bufferedWaveProvider.BufferDuration.TotalMilliseconds;
                 }
-                else if (bufferedSeconds > 4 && playbackState == StreamingPlaybackState.Buffering)
+                else if (bufferedWaveProvider != null)
                 {
-                    Play();
+                    var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
+                    //ShowBufferState(bufferedSeconds);
+                    // make it stutter less if we buffer up a decent amount before playing
+                    if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
+                    {
+                        Pause();
+                    }
+                    else if (bufferedSeconds > 4 && playbackState == StreamingPlaybackState.Buffering)
+                    {
+                        Play();
+                    }
+                    else if (fullyDownloaded && bufferedSeconds == 0)
+                    {
+                        //Debug.WriteLine("Reached end of stream");
+                        StopPlayback();
+                    }
                 }
-                else if (fullyDownloaded && bufferedSeconds == 0)
-                {
-                    //Debug.WriteLine("Reached end of stream");
-                    StopPlayback();
-                }
-            }
 
+            }
+            Thread.Sleep(100);
         }
     }
 
@@ -221,8 +225,6 @@ public class JukeboxClient
 
     private void buttonPlay_Click()
     {
-        String s = "";
-
         if (playbackState == StreamingPlaybackState.Stopped)
         {
             playbackState = StreamingPlaybackState.Buffering;
