@@ -13,7 +13,9 @@ public class JukeboxClient
     {
         Console.WriteLine("Hi");
         JukeboxClient jc = new JukeboxClient();
-        jc.StreamAudio();
+        jc.buttonPlay_Click();
+        jc.timer1_Tick();
+        jc.Play();
     }
 
     enum StreamingPlaybackState
@@ -24,37 +26,42 @@ public class JukeboxClient
         Paused
     }
 
-    static readonly HttpClient client = new HttpClient();
+    //static readonly HttpClient client = new HttpClient();
     private static BufferedWaveProvider bufferedWaveProvider;
     private IWavePlayer waveOut;
     private static volatile StreamingPlaybackState playbackState;
     private static volatile bool fullyDownloaded;
+    private VolumeWaveProvider16 volumeProvider;
+    IMp3FrameDecompressor decompressor = null;
+    Stream iStream = File.OpenRead("bensound-sunny.mp3"); // hardcoded, update path for your own mp3
+    //private HttpWebRequest request;
+    //byte[] buffer = File.ReadAllBytes("bensound-sunny.mp3");
 
-    public async void StreamAudio()
+    public void StreamAudio(object state)
     {
-        fullyDownloaded = false;
-        HttpResponseMessage response;
-        Stream readFullyStream;
+        /*fullyDownloaded = false;
+        request = (HttpWebRequest) WebRequest.Create("http://localhost:80/");
+        HttpWebResponse response;
 
         // get the stream from the server
         try
         {
-            response = await client.GetAsync("http://localhost:80/");
-            readFullyStream = new ReadFullyStream(response.Content.ReadAsStream());
+            response = (HttpWebResponse) request.GetResponse();
         }
         catch(Exception ex) 
         {
             Console.WriteLine(ex.Message);
             return;
-        }
+        }*/
 
         var buffer = new byte[16384 * 4];
-        IMp3FrameDecompressor decompressor = null;
 
         try
         {
+            var readFullyStream = new ReadFullyStream(iStream);
             do
             {
+                Thread.Sleep(10);
                 if (IsBufferNearlyFull)
                 {
                     Console.WriteLine("Buffer is full!");
@@ -144,7 +151,7 @@ public class JukeboxClient
         {
             if (!fullyDownloaded)
             {
-                client.CancelPendingRequests();
+                //client.CancelPendingRequests();
             }
 
             playbackState = StreamingPlaybackState.Stopped;
@@ -159,40 +166,44 @@ public class JukeboxClient
         }
     }
 
-    private void timer1_Tick(object sender, EventArgs e)
+    private void timer1_Tick()
     {
-        if (playbackState != StreamingPlaybackState.Stopped)
+        while (true)
         {
-            if (waveOut == null && bufferedWaveProvider != null)
+            if (playbackState != StreamingPlaybackState.Stopped)
             {
-                //Debug.WriteLine("Creating WaveOut Device");
-                waveOut = CreateWaveOut();
-                waveOut.PlaybackStopped += OnPlaybackStopped;
-                //volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
-                //volumeProvider.Volume = volumeSlider1.Volume;
-                //waveOut.Init(volumeProvider);
-                //progressBarBuffer.Maximum = (int)bufferedWaveProvider.BufferDuration.TotalMilliseconds;
-            }
-            else if (bufferedWaveProvider != null)
-            {
-                var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
-                //ShowBufferState(bufferedSeconds);
-                // make it stutter less if we buffer up a decent amount before playing
-                if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
+                if (waveOut == null && bufferedWaveProvider != null)
                 {
-                    Pause();
+                    //Debug.WriteLine("Creating WaveOut Device");
+                    waveOut = CreateWaveOut();
+                    waveOut.PlaybackStopped += OnPlaybackStopped;
+                    volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
+                    volumeProvider.Volume = 2;
+                    waveOut.Init(volumeProvider);
+                    //progressBarBuffer.Maximum = (int)bufferedWaveProvider.BufferDuration.TotalMilliseconds;
                 }
-                else if (bufferedSeconds > 4 && playbackState == StreamingPlaybackState.Buffering)
+                else if (bufferedWaveProvider != null)
                 {
-                    Play();
+                    var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
+                    //ShowBufferState(bufferedSeconds);
+                    // make it stutter less if we buffer up a decent amount before playing
+                    if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
+                    {
+                        Pause();
+                    }
+                    else if (bufferedSeconds > 4 && playbackState == StreamingPlaybackState.Buffering)
+                    {
+                        Play();
+                    }
+                    else if (fullyDownloaded && bufferedSeconds == 0)
+                    {
+                        //Debug.WriteLine("Reached end of stream");
+                        StopPlayback();
+                    }
                 }
-                else if (fullyDownloaded && bufferedSeconds == 0)
-                {
-                    //Debug.WriteLine("Reached end of stream");
-                    StopPlayback();
-                }
-            }
 
+            }
+            Thread.Sleep(100);
         }
     }
 
@@ -210,6 +221,20 @@ public class JukeboxClient
         waveOut.Play();
         Console.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
         playbackState = StreamingPlaybackState.Playing;
+    }
+
+    private void buttonPlay_Click()
+    {
+        if (playbackState == StreamingPlaybackState.Stopped)
+        {
+            playbackState = StreamingPlaybackState.Buffering;
+            bufferedWaveProvider = null;
+            ThreadPool.QueueUserWorkItem(StreamAudio);
+        }
+        else if (playbackState == StreamingPlaybackState.Paused)
+        {
+            playbackState = StreamingPlaybackState.Buffering;
+        }
     }
 
 
