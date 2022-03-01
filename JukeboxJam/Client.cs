@@ -4,8 +4,9 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using NAudio.Wave;
-
-
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class JukeboxClient
 {
@@ -13,7 +14,7 @@ public class JukeboxClient
     {
         Console.WriteLine("Hi");
         JukeboxClient jc = new JukeboxClient();
-        jc.StreamAudio();
+        jc.StreamAudio().Wait();
     }
 
     enum StreamingPlaybackState
@@ -30,7 +31,7 @@ public class JukeboxClient
     private static volatile StreamingPlaybackState playbackState;
     private static volatile bool fullyDownloaded;
 
-    public async void StreamAudio()
+    public async Task StreamAudio()
     {
         fullyDownloaded = false;
         HttpResponseMessage response;
@@ -40,6 +41,7 @@ public class JukeboxClient
         try
         {
             response = await client.GetAsync("http://localhost:80/");
+            Console.WriteLine(response.Content.);
             readFullyStream = new ReadFullyStream(response.Content.ReadAsStream());
         }
         catch(Exception ex) 
