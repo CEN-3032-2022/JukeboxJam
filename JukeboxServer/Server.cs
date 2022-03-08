@@ -26,7 +26,9 @@ public class JukeboxServer
                 Console.WriteLine("Client has been accepted.");
                 NetworkStream stream = client.GetStream();
 
-                using(FileStream fileStream = File.OpenRead("bensound-sunny.mp3"))
+                string path = Path.GetFullPath(@"..\..\..\songs\bensound-sunny.mp3");
+
+                using (FileStream fileStream = File.OpenRead(path))
                 {
                     byte[] sendBuffer = new byte[fileStream.Length];
                     fileStream.Read(sendBuffer, 0, sendBuffer.Length);
