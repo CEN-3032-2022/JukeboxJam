@@ -8,42 +8,57 @@ public class JukeboxServer
 {
     public static int Main(string[] args)
     {
-        StartServer();
+        StartListening();
         return 0;
     }
 
-    public static void StartServer()
+    public static void StartListening()
     {
-        HttpListener listener = new HttpListener();
-        HttpListenerContext context;
-        HttpListenerRequest request;
-        HttpListenerResponse response;
-        Stream output;
+        TcpListener listener = new TcpListener(IPAddress.Any, 1302);
+        listener.Start();
 
-        try
+        while (true)
         {
-            listener.Prefixes.Add("http://*:80/");
-            listener.Start();
-            Console.WriteLine("Listening...");
+            try
+            {
+                Console.WriteLine("Waiting for a connection.");
+                TcpClient client = listener.AcceptTcpClient();
+                Console.WriteLine("Client has been accepted.");
+                NetworkStream stream = client.GetStream();
 
-            // Note: The GetContext method blocks while waiting for a request.
-            context = listener.GetContext();
-            request = context.Request;
-            // Obtain a response object.
-            response = context.Response;
-            // Construct a response.
-            string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-            // Get a response stream and write the response to it.
-            response.ContentLength64 = buffer.Length;
-            output = response.OutputStream;
-            output.Write(buffer, 0, buffer.Length);
-            // You must close the output stream.
-            output.Close();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
+                using(FileStream fileStream = File.OpenRead("bensound-sunny.mp3"))
+                {
+                    byte[] sendBuffer = new byte[fileStream.Length];
+                    fileStream.Read(sendBuffer, 0, sendBuffer.Length);
+                    Console.WriteLine("Sent audio data to client...");
+                    stream.Write(sendBuffer, 0, sendBuffer.Length);
+                }
+
+                
+
+                //// buffer used for receiving data
+                //byte[] buffer = new byte[1024];
+                //stream.Read(buffer, 0, buffer.Length);
+
+                //// count the number of bytes in buffer
+                //int bytesReceived = 0;
+                //foreach (byte b in buffer)
+                //{
+                //    if (b != 0)
+                //    {
+                //        bytesReceived++;
+                //    }
+                //}
+
+                //string request = Encoding.UTF8.GetString(buffer, 0, bytesReceived);
+                //Console.WriteLine("Request received " + request);
+                stream.Flush();
+                Console.WriteLine("End");
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
