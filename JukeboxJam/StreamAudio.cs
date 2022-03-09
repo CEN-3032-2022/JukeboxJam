@@ -192,9 +192,12 @@ public class StreamAudio
 
     public void Play()
     {
-        waveOut.Play();
-        Debug.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
-        playbackState = StreamingPlaybackState.Playing;
+        if (playbackState != StreamingPlaybackState.Playing)
+        {
+            waveOut.Play();
+            Debug.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+            playbackState = StreamingPlaybackState.Playing;
+        }   
     }
 
     public void StartBuffering()
