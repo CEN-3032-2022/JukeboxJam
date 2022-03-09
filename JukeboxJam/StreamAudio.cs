@@ -9,7 +9,7 @@ using NAudio.Wave;
 
 public class StreamAudio
 {
-    enum StreamingPlaybackState
+    public enum StreamingPlaybackState
     {
         Stopped,
         Playing,
@@ -19,7 +19,7 @@ public class StreamAudio
 
     private static BufferedWaveProvider bufferedWaveProvider;
     private IWavePlayer waveOut;
-    private static volatile StreamingPlaybackState playbackState;
+    public static StreamingPlaybackState playbackState;
     private static volatile bool fullyDownloaded;
     private VolumeWaveProvider16 volumeProvider;
     IMp3FrameDecompressor decompressor = null;
@@ -43,7 +43,7 @@ public class StreamAudio
                 Thread.Sleep(10);
                 if (IsBufferNearlyFull)
                 {
-                    //Console.WriteLine("Buffer is full!");
+                    Debug.WriteLine("Buffer is full!");
                     Thread.Sleep(500);
                 }
                 else
@@ -55,6 +55,7 @@ public class StreamAudio
                     }
                     catch (EndOfStreamException)
                     {
+                        Debug.WriteLine("EndOfStreamException thrown!");
                         fullyDownloaded = true;
                         break;
                     }
@@ -77,7 +78,7 @@ public class StreamAudio
         }
         catch (Exception ex)
         {
-            //Console.WriteLine(ex.Message);
+            Debug.WriteLine(ex.Message);
         }
         finally
         {
@@ -113,8 +114,9 @@ public class StreamAudio
     {
         if (playbackState == StreamingPlaybackState.Playing || playbackState == StreamingPlaybackState.Buffering)
         {
-            waveOut.Pause();
-            //Console.WriteLine(String.Format("User requested Pause, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+            if (waveOut != null)
+                waveOut.Pause();
+            Debug.WriteLine(String.Format("User requested Pause, waveOut.PlaybackState={0}", waveOut.PlaybackState));
             playbackState = StreamingPlaybackState.Paused;
         }
     }
@@ -145,7 +147,7 @@ public class StreamAudio
         }
     }
 
-    public void timer1_Tick(Object source, System.Timers.ElapsedEventArgs e)
+    public void UpdateAudioState()
     {
         if (playbackState != StreamingPlaybackState.Stopped)
         {
@@ -176,27 +178,26 @@ public class StreamAudio
                     StopPlayback();
                 }
             }
-
         }
     }
 
     private static void OnPlaybackStopped(object sender, StoppedEventArgs e)
     {
-        Console.WriteLine("Playback Stopped!");
+        Debug.WriteLine("Playback Stopped!");
         if (e.Exception != null)
         {
-            //MessageBox.Show(String.Format("Playback Error {0}", e.Exception.Message));
+            Debug.WriteLine(e.ToString());
         }
     }
 
     public void Play()
     {
         waveOut.Play();
-        //Console.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+        Debug.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
         playbackState = StreamingPlaybackState.Playing;
     }
 
-    public void buttonPlay_Click()
+    public void StartBuffering()
     {
         if (playbackState == StreamingPlaybackState.Stopped)
         {
@@ -207,6 +208,10 @@ public class StreamAudio
         else if (playbackState == StreamingPlaybackState.Paused)
         {
             playbackState = StreamingPlaybackState.Buffering;
+        } 
+        else
+        {
+            Pause();
         }
     }
 }

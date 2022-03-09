@@ -3,9 +3,6 @@ using System.Text;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Timers;
-
-
 
 public class JukeboxClient : Form
 {
@@ -13,30 +10,14 @@ public class JukeboxClient : Form
     private Panel welcomePanel;
     private Panel roomPanel;
     private StreamAudio jc;
+    private TcpClient client;
+    private NetworkStream networkStream;
+    private MemoryStream responseStream;
     private System.Timers.Timer timer;
 
     public JukeboxClient()
     {
         initializeComponents();
-
-        try
-        {
-            TcpClient client = new TcpClient("127.0.0.1", 1302);
-            NetworkStream stream = client.GetStream();
-
-            byte[] temp = new byte[1960595];
-            stream.Read(temp, 0, temp.Length);
-            Stream responseStream = new MemoryStream(temp);
-            jc = new StreamAudio(responseStream);
-
-            stream.Close();
-            client.Close();
-            Console.ReadKey();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
     }
 
 
@@ -46,9 +27,6 @@ public class JukeboxClient : Form
         ClientSize = new Size(300, 300);
         CenterToScreen();
 
-        // create a timer
-        timer = new System.Timers.Timer(25);
-
         welcomePanel = new welcomePanel(new EventHandler(enterRoom));
         welcomePanel.Size = Size;
         roomPanel = new roomPanel(new EventHandler(leaveRoom), new EventHandler(play));
@@ -56,32 +34,57 @@ public class JukeboxClient : Form
         Controls.Add(welcomePanel);
     }
 
+    private void initializeConnection()
+    {
+        try
+        {
+            client = new TcpClient("127.0.0.1", 1302);
+            networkStream = client.GetStream();
+
+            byte[] temp = new byte[1960595];
+            networkStream.Read(temp, 0, temp.Length);
+            responseStream = new MemoryStream(temp);
+            jc = new StreamAudio(responseStream);
+
+            // timer for updating audio status
+            timer = new System.Timers.Timer(25);
+            timer.Elapsed += timer_Tick;
+            timer.Enabled = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
     private void enterRoom(object sender, EventArgs e)
     {
+        initializeConnection();
         Controls.Remove(welcomePanel);
         Controls.Add(roomPanel);
-
     }
 
     private void leaveRoom(object sender, EventArgs e)
     {
         Controls.Remove(roomPanel);
         Controls.Add(welcomePanel);
+
+        jc.Stop();
+
+        // stream cleanup
+        networkStream.Close();
+        responseStream.Close();
+        client.Close();
     }
 
     private void play(object sender, EventArgs e)
     {
-        jc.buttonPlay_Click();
-        timer.Elapsed += jc.timer1_Tick;
-        timer.Enabled = true;
+        jc.StartBuffering(); 
     }
 
-    private static void testAudio(Stream stream)
+    public void timer_Tick(object sender, System.Timers.ElapsedEventArgs e)
     {
-        //Console.Write("Testing audio...");
-        StreamAudio jc = new StreamAudio(stream);
-        //jc.buttonPlay_Click();
-        //jc.timer1_Tick();
+        jc.UpdateAudioState();
     }
 
     [STAThread]

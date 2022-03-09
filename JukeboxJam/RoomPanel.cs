@@ -51,7 +51,7 @@ public class roomPanel : Panel
     {
         playButton = new Button();
         playButton.Size = new Size(150, 30);
-        playButton.Text = "Play";
+        playButton.Text = "Play/Pause";
         playButton.Click += new EventHandler(playEvent);
         playButton.Location = new System.Drawing.Point(75, 125);
         Controls.Add(playButton);
