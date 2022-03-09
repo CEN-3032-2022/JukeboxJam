@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ public class StreamAudio
                 Thread.Sleep(10);
                 if (IsBufferNearlyFull)
                 {
-                    Console.WriteLine("Buffer is full!");
+                    //Console.WriteLine("Buffer is full!");
                     Thread.Sleep(500);
                 }
                 else
@@ -76,7 +77,7 @@ public class StreamAudio
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            //Console.WriteLine(ex.Message);
         }
         finally
         {
@@ -113,7 +114,7 @@ public class StreamAudio
         if (playbackState == StreamingPlaybackState.Playing || playbackState == StreamingPlaybackState.Buffering)
         {
             waveOut.Pause();
-            Console.WriteLine(String.Format("User requested Pause, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+            //Console.WriteLine(String.Format("User requested Pause, waveOut.PlaybackState={0}", waveOut.PlaybackState));
             playbackState = StreamingPlaybackState.Paused;
         }
     }
@@ -144,42 +145,38 @@ public class StreamAudio
         }
     }
 
-    public void timer1_Tick()
+    public void timer1_Tick(Object source, System.Timers.ElapsedEventArgs e)
     {
-        while (true)
+        if (playbackState != StreamingPlaybackState.Stopped)
         {
-            if (playbackState != StreamingPlaybackState.Stopped)
+            if (waveOut == null && bufferedWaveProvider != null)
             {
-                if (waveOut == null && bufferedWaveProvider != null)
-                {
-                    waveOut = CreateWaveOut();
-                    waveOut.PlaybackStopped += OnPlaybackStopped;
-                    volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
-                    volumeProvider.Volume = 2;
-                    waveOut.Init(volumeProvider);
-                    //progressBarBuffer.Maximum = (int)bufferedWaveProvider.BufferDuration.TotalMilliseconds;
-                }
-                else if (bufferedWaveProvider != null)
-                {
-                    var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
-                    //ShowBufferState(bufferedSeconds);
-                    // make it stutter less if we buffer up a decent amount before playing
-                    if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
-                    {
-                        Pause();
-                    }
-                    else if (bufferedSeconds > 4 && playbackState == StreamingPlaybackState.Buffering)
-                    {
-                        Play();
-                    }
-                    else if (fullyDownloaded && bufferedSeconds == 0)
-                    {
-                        StopPlayback();
-                    }
-                }
-
+                waveOut = CreateWaveOut();
+                waveOut.PlaybackStopped += OnPlaybackStopped;
+                volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
+                volumeProvider.Volume = 2;
+                waveOut.Init(volumeProvider);
+                //progressBarBuffer.Maximum = (int)bufferedWaveProvider.BufferDuration.TotalMilliseconds;
             }
-            Thread.Sleep(100);
+            else if (bufferedWaveProvider != null)
+            {
+                var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
+                //ShowBufferState(bufferedSeconds);
+                // make it stutter less if we buffer up a decent amount before playing
+                if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
+                {
+                    Pause();
+                }
+                else if (bufferedSeconds > 4 && playbackState == StreamingPlaybackState.Buffering)
+                {
+                    Play();
+                }
+                else if (fullyDownloaded && bufferedSeconds == 0)
+                {
+                    StopPlayback();
+                }
+            }
+
         }
     }
 
@@ -195,7 +192,7 @@ public class StreamAudio
     public void Play()
     {
         waveOut.Play();
-        Console.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+        //Console.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
         playbackState = StreamingPlaybackState.Playing;
     }
 
