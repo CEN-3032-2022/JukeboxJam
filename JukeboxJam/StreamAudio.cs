@@ -192,9 +192,16 @@ public class StreamAudio
 
     public void Play()
     {
-        waveOut.Play();
-        Debug.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
-        playbackState = StreamingPlaybackState.Playing;
+        try
+        {
+            waveOut.Play();
+            Debug.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+            playbackState = StreamingPlaybackState.Playing;
+        } 
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.ToString());
+        }
     }
 
     public void StartBuffering()
@@ -208,7 +215,7 @@ public class StreamAudio
         else if (playbackState == StreamingPlaybackState.Paused)
         {
             playbackState = StreamingPlaybackState.Buffering;
-        } 
+        }
         else
         {
             Pause();
