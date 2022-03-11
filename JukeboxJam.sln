@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JukeboxClient", "JukeboxJam\JukeboxClient.csproj", "{5CE0E4FE-89CC-4E30-9FD7-6E0B3016BE30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JukeboxServer", "JukeboxServer\JukeboxServer.csproj", "{BEB70971-2084-4F4C-A650-99BDBA340DAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5CE0E4FE-89CC-4E30-9FD7-6E0B3016BE30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CE0E4FE-89CC-4E30-9FD7-6E0B3016BE30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CE0E4FE-89CC-4E30-9FD7-6E0B3016BE30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CE0E4FE-89CC-4E30-9FD7-6E0B3016BE30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEB70971-2084-4F4C-A650-99BDBA340DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEB70971-2084-4F4C-A650-99BDBA340DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEB70971-2084-4F4C-A650-99BDBA340DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEB70971-2084-4F4C-A650-99BDBA340DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3B3886C8-A8F8-460B-B95C-2B6243140B5A}
+	EndGlobalSection
+EndGlobal
