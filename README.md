@@ -7,6 +7,6 @@ Jukebox Jam provides a way for users to listen to music alongside those across t
   <li>Download and extract the project zip file</li>
   <li>Run the JukeboxServer.exe</li>
   <li>Make sure to allow the server through firewall</li>
-  <li>Run the JukeboxClient.exe/li>
+  <li>Run the JukeboxClient.exe</li>
   <li>Click enter room then Play/pause</li>
 </ol>
