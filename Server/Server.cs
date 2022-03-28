@@ -43,13 +43,17 @@ public class Server {
         HttpListenerResponse response = context.Response;
 
         // Construct a response.
-        string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
-        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+        //string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
+
+        //Read a file into the stream
+        FileStream fileStream = File.OpenRead(@"C:\Users\jesse\Music\ukulele.mp3");
+        byte[] sendBuffer = new byte[fileStream.Length];
+        fileStream.Read(sendBuffer, 0, sendBuffer.Length);
 
         // Get a response stream and write the response to it.
-        response.ContentLength64 = buffer.Length;
+        //response.ContentLength64 = buffer.Length;
         Stream output = response.OutputStream;
-        output.Write(buffer, 0, buffer.Length);
+        output.Write(sendBuffer, 0, sendBuffer.Length);
 
         // You must close the output stream.
         output.Close();
@@ -57,5 +61,3 @@ public class Server {
     }
 
 }
-
-

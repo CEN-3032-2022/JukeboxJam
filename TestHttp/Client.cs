@@ -10,7 +10,15 @@
         {
             HttpResponseMessage response = await client.GetAsync("http://localhost:8080/");
             response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            byte[] responseBody = await response.Content.ReadAsByteArrayAsync();
+
+            string path = @"C:\Users\jesse\source\repos\TestHttp\TestHttp\";
+            // Write file to song folder
+            using (FileStream fs = File.Create("ukulele.mp3"))
+            {
+                fs.Write(responseBody);
+            }
+
             // Above three lines can be replaced with new helper method below
             // string responseBody = await client.GetStringAsync(uri);
 
