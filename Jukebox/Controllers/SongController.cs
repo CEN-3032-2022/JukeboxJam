@@ -37,7 +37,7 @@ namespace Jukebox.Controllers
         };
 
         [HttpGet("/getMp3/{id}")]
-        public async Task<ActionResult<Song>> Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
             // search for a song, can be modified for database instead
             var song = songs.Find(song => song.Id == id);
@@ -57,9 +57,7 @@ namespace Jukebox.Controllers
             {
                 // gives a name to the returned file
                 FileDownloadName = fileName
-            };
-
-               
+            };        
         }
 
         [HttpGet("/getSongs")]
