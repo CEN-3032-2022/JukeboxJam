@@ -39,9 +39,10 @@ namespace JukeboxClient
             }
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void JamSessionMenuItem_Click_1(object sender, RoutedEventArgs e)
         {
-
+            JamSessionWindow jamWindow = new JamSessionWindow();
+            jamWindow.Show();
         }
     }
 }

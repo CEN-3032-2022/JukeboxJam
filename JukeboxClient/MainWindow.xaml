@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JukeboxClient"
         mc:Ignorable="d"
-        Title="JukeboxJam" Height="480" Width="480">
+        Title="JukeboxJam" Height="480" Width="480"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-        <Menu x:Name="menu" Height="30" VerticalAlignment="Top" HorizontalAlignment="Right" Width="480">
+        <Menu x:Name="menu" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="480">
             <MenuItem x:Name="FileMenuItem" Header="File" ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" AutomationProperties.IsOffscreenBehavior="Default" Margin="18,0,0,0" FontSize="14">
-                <MenuItem Header="Connect to jam session"/>
+                <MenuItem x:Name="JamSessionMenuItem" Header="Connect to jam session" Click="JamSessionMenuItem_Click_1"/>
                 <MenuItem Header="Exit"/>
             </MenuItem>
-            <MenuItem x:Name="HelpMenuItem" Header="Help" Click="MenuItem_Click" FontSize="14">
+            <MenuItem x:Name="HelpMenuItem" Header="Help" FontSize="14">
                 <MenuItem Header="View instructions"/>
             </MenuItem>
         </Menu>
