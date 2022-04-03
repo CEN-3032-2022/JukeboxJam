@@ -15,7 +15,6 @@ namespace Jukebox.Controllers
                 Title = "Acoustic Breeze",
                 Artist = "Bensound",
                 Album = "Generic",
-                FileName = "acousticbreeze.mp3"
             },
             new Song
             {
@@ -23,7 +22,6 @@ namespace Jukebox.Controllers
                 Title = "Ukulele",
                 Artist = "Bensound",
                 Album = "Generic",
-                FileName = "ukulele.mp3"
             },
             new Song
             {
@@ -31,7 +29,6 @@ namespace Jukebox.Controllers
                 Title = "All that",
                 Artist = "Bensound",
                 Album = "Generic",
-                FileName = "allthat.mp3"
             },
 
         };
