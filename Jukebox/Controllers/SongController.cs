@@ -7,7 +7,10 @@ namespace Jukebox.Controllers
     [ApiController]
     public class SongController : ControllerBase
     {
-        private static List<Song> songs = new List<Song>
+        /**
+         * Mock data for server. Will switch to database later.
+         */
+        private static List<Song> playlist = new List<Song>
         {
             new Song
             {
@@ -37,7 +40,7 @@ namespace Jukebox.Controllers
         public async Task<ActionResult> Get(int id)
         {
             // search for a song, can be modified for database instead
-            var song = songs.Find(song => song.Id == id);
+            var song = playlist.Find(song => song.Id == id);
             if (song == null)
                 return BadRequest("Song not found!");
 
@@ -57,13 +60,10 @@ namespace Jukebox.Controllers
             };        
         }
 
-        [HttpGet("/getSongs")]
+        [HttpGet("/getPlaylist")]
         public async Task<ActionResult<List<Song>>> Get()
         {
-            Playlist p1 = new Playlist();
-            p1.SongList = songs;
-
-            return Ok(p1.SongList);
+            return Ok(playlist);
         }
     }
 }
