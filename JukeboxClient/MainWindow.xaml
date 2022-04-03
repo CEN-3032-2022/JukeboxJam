@@ -31,7 +31,7 @@
                     <ImageBrush ImageSource="/forward.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Play" FontSize="18" FontWeight="Normal" BorderBrush="{x:Null}" Width="46" HorizontalAlignment="Center">
+            <Button x:Name="Play" FontSize="18" FontWeight="Normal" BorderBrush="{x:Null}" Width="46" HorizontalAlignment="Center" Click="Play_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/play-buttton.png" Stretch="Uniform"/>
                 </Button.Background>

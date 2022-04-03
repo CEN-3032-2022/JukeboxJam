@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,12 @@ namespace JukeboxClient
             InitializeComponent();
         }
 
+        /**
+         * For some very odd reason, WPF menus are
+         * aligned awkardly to the left of the
+         * main window. This makes them behave
+         * normally.
+         */
         private void FixMenuAlignment()
         {
             var ifLeft = SystemParameters.MenuDropAlignment;
@@ -43,6 +50,13 @@ namespace JukeboxClient
         {
             JamSessionWindow jamWindow = new JamSessionWindow();
             jamWindow.Show();
+        }
+
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+            //Debug.WriteLine(AppData.playlist.Find(song => song.Id == 1).Artist);
+            Network.GetPlaylist();
+            Network.GetSongs();
         }
     }
 }
