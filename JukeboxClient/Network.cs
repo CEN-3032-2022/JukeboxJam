@@ -19,7 +19,7 @@ namespace JukeboxClient
     public static class Network
     {
         private static HttpClient httpClient;
-        private static string hostUrl = @"http://localhost:5000/";
+        private static string hostUrl = @"http://localhost:5078/";
 
         static Network()
         {
