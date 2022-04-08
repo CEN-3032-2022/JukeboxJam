@@ -73,9 +73,12 @@ namespace JukeboxClient
 
             music.decrementSong();
             SongPlayer = music.loadSong(SongPlayer);
-            ConnectionLabel.Content = SongPlayer.Source.ToString();
         }
 
-        
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Network.GetPlaylist();
+            Network.GetSongs();
+        }
     }
 }
