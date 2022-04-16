@@ -21,6 +21,10 @@ namespace JukeboxClient
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MusicPlayer music = new MusicPlayer();
+        private int songIndex = 0;
+
+
         public MainWindow()
         {
             FixMenuAlignment();
@@ -53,8 +57,26 @@ namespace JukeboxClient
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
+        {    
+            music.streamSong(SongPlayer);
+        }
+
+
+        private void Forward_Click(object sender, RoutedEventArgs e)
         {
-            //Debug.WriteLine(AppData.playlist.Find(song => song.Id == 1).Artist);
+            music.incrementSong();
+            SongPlayer = music.loadSong(SongPlayer);
+        }
+
+        private void Reverse_Click(object sender, RoutedEventArgs e)
+        {
+
+            music.decrementSong();
+            SongPlayer = music.loadSong(SongPlayer);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
             Network.GetPlaylist();
             Network.GetSongs();
         }

@@ -23,5 +23,27 @@ namespace JukeboxClient
         {
             InitializeComponent();
         }
+
+        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            string hbt = HostTextBox.Text;
+            string ptb = HostTextBox_Copy1.Text;
+            string address = "";
+
+            if (hbt.CompareTo("") == 0 || ptb.CompareTo("") == 0)
+            {
+
+                address = "http://localhost:5078/";
+            }
+            else
+            {
+                address = "http://" + hbt + ":" + ptb + "/";
+            }
+
+            Network.setHostUrl(address);
+            //Network.GetPlaylist();
+            //Network.GetSongs();
+        }
+            
     }
 }

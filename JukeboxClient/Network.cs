@@ -19,7 +19,7 @@ namespace JukeboxClient
     public static class Network
     {
         private static HttpClient httpClient;
-        private static string hostUrl = @"http://localhost:5000/";
+        private static string hostUrl = "http://localhost:5078/";
 
         static Network()
         {
@@ -31,6 +31,12 @@ namespace JukeboxClient
          * Deserialize it and store into the program's
          * AppData.
          */
+
+        public static void setHostUrl(string hUrl)
+        {
+            hostUrl = hUrl;
+        }
+
         public static async Task GetPlaylist()
         {
             try
