@@ -16,7 +16,7 @@ namespace JukeboxClient
         private bool isPlaying = false;
 
         public MediaElement loadSong(MediaElement songPlayer)
-        {
+        { 
             songPlayer.Source = new Uri(Directory.GetFiles(musicDirectory)[songIndex]);
             songPlayer.LoadedBehavior = MediaState.Manual;
             return songPlayer;
