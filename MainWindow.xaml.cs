@@ -80,5 +80,17 @@ namespace JukeboxClient
             Network.GetPlaylist();
             Network.GetSongs();
         }
+
+        private void PostButton_Click(object sender, RoutedEventArgs e)
+        {
+            AppData.roomState.Position = SongPlayer.Position;
+            Network.PostRoomState();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Network.GetRoomState();
+            TestLabel.Content = AppData.roomState.Position.ToString();
+        }
     }
 }

@@ -130,5 +130,22 @@ namespace JukeboxClient
                 Debug.WriteLine(ex.Message);
             }
         }
+        public static async Task GetRoomState()
+        {
+            // obtain the response from the server
+            string url = String.Concat(hostUrl, "getRoomState");
+            var httpResponseMessage = await httpClient.GetAsync(url);
+            string jsonResponse = await httpResponseMessage.Content.ReadAsStringAsync();
+
+            // deserialize the json string obtained from server
+            AppData.roomState = JsonConvert.DeserializeObject<RoomState>(jsonResponse);
+        }
+
+        public static async Task PostRoomState()
+        {
+            string url = String.Concat(hostUrl, "postRoomState");
+            var data = new StringContent(System.Text.Json.JsonSerializer.Serialize(AppData.roomState), Encoding.UTF8, "application/json");
+            await httpClient.PostAsync(hostUrl, data);
+        }
     }
 }

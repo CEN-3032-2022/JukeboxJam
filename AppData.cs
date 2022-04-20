@@ -12,9 +12,11 @@ namespace JukeboxClient
     public static class AppData
     {
         public static List<Song> playlist;
+        public static RoomState roomState;
 
         static AppData()
         {
+            roomState = new RoomState();
             playlist = new List<Song>();
         }
     }

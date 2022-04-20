@@ -12,7 +12,10 @@ namespace JukeboxClient
     internal class MusicPlayer
     {
         private int songIndex = 0;
+        private bool isPlaying = false;
+        private MediaElement song;
         private String musicDirectory = Path.Combine(Directory.GetCurrentDirectory() + @"../../../../music");
+
 
         public MediaElement loadSong(MediaElement songPlayer)
         { 
@@ -26,9 +29,15 @@ namespace JukeboxClient
             if (songPlayer.Source != null)
             {
                 songPlayer.Play();
+                setPlaying(true);
             }
         }
 
+        public void pauseSong(MediaElement songPlayer)
+        {
+            songPlayer.Pause();
+            setPlaying(false);
+        }
 
         public int incrementSong()
         {
@@ -47,6 +56,16 @@ namespace JukeboxClient
                 songIndex = (Directory.GetFiles(musicDirectory).Length - 1);
             }
             return songIndex;
+        }
+
+        public bool getPlaying()
+        {
+            return isPlaying;
+        }
+
+        public void setPlaying(bool playing)
+        {
+            isPlaying = playing;
         }
     }
 }
