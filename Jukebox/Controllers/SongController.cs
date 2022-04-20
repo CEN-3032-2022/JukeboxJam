@@ -14,21 +14,21 @@ namespace Jukebox.Controllers
         {
             new Song
             {
-                Id = 1,
+                Id = 0,
                 Title = "Acoustic Breeze",
                 Artist = "Bensound",
                 Album = "Generic",
             },
             new Song
             {
-                Id = 2,
+                Id = 1,
                 Title = "Ukulele",
                 Artist = "Bensound",
                 Album = "Generic",
             },
             new Song
             {
-                Id = 3,
+                Id = 2,
                 Title = "All that",
                 Artist = "Bensound",
                 Album = "Generic",
