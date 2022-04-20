@@ -53,7 +53,10 @@ namespace JukeboxClient
                 if (songs != null)
                 {
                     AppData.playlist.Clear();
-                    AppData.playlist.AddRange(songs);
+                    foreach(Song song in songs)
+                    {
+                        AppData.playlist.Add(song);
+                    }
                 }
 
             }
@@ -82,7 +85,7 @@ namespace JukeboxClient
             {
                 if (mp3Files.Count == 0)
                 {
-                    AppData.playlist.ForEach(async song =>
+                    foreach (Song song in AppData.playlist)
                     {
                         string fileName = $"{song.Id}-{song.Title}-{song.Artist}.mp3".ToLower().Replace(" ", "%");
 
@@ -97,7 +100,7 @@ namespace JukeboxClient
                         {
                             fs.Write(fileBytes);
                         }
-                    });
+                    }
                 }
                 else if (mp3Files.Count > 0)
                 {
@@ -107,7 +110,7 @@ namespace JukeboxClient
                         * Search the music directory for existing songs
                         * so we don't have to download them again.
                         */
-                        AppData.playlist.ForEach(async song =>
+                        foreach (Song song in AppData.playlist)
                         {
                             string fileName = $"{song.Id}-{song.Title}-{song.Artist}.mp3".ToLower().Replace(" ", "%");
 
@@ -125,7 +128,7 @@ namespace JukeboxClient
                                     fs.Write(fileBytes);
                                 }
                             }
-                        });
+                        }
                     }
                 }
 

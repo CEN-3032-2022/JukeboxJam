@@ -43,9 +43,7 @@
             </Button>
 
         </DockPanel>
-        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Width="390" Height="268" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,51,0,0" Panel.ZIndex="6"/>
-        <RadioButton x:Name="SongRadioButton" Content="Song Information" FontSize="16" Margin="92,328,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <RadioButton x:Name="PlaylistRadioButton" Content="Playlist Information" HorizontalAlignment="Left" Margin="240,328,0,0" FontSize="16" VerticalAlignment="Top"/>
+        <DataGrid IsReadOnly="True" x:Name="PlaylistGrid" ColumnWidth="*" ItemsSource="{Binding Source={x:Static local:AppData.playlist}}" Margin="20,35,20,141" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFBEBBBB" VerticalGridLinesBrush="#FFBEBBBB" RowHeaderWidth="0"/>
         <MediaElement x:Name="SongPlayer" HorizontalAlignment="Left" Height="30" Margin="45,368,0,0" VerticalAlignment="Top" Width="26"/>
         <Button x:Name="Download" Content="Download Songs" HorizontalAlignment="Center" Margin="0,364,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.439,-0.048" Click="Button_Click"/>
 

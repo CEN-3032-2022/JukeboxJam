@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,11 @@ namespace JukeboxClient
     */
     public static class AppData
     {
-        public static List<Song> playlist;
+        public static ObservableCollection<Song> playlist;
 
         static AppData()
         {
-            playlist = new List<Song>();
+            playlist = new ObservableCollection<Song>();
         }
     }
 }
