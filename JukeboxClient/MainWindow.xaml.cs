@@ -96,5 +96,10 @@ namespace JukeboxClient
             Network.GetPlaylist();
             Network.GetSongs();
         }
+
+        private void PlaylistGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Debug.WriteLine(PlaylistGrid.SelectedIndex);
+        }
     }
 }
