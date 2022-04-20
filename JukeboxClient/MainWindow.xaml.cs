@@ -56,6 +56,22 @@ namespace JukeboxClient
             jamWindow.Show();
         }
 
+        private void JamSessionMenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void HelpClick(object sender, RoutedEventArgs e)
+        {
+            string message = "1. Click the \"load songs\" button\n"
+                + "2. Click the next button to start the playlist queue\n"
+                + "3. Click the play button to start the music\n"
+                + "4. If you wish to pause the music, click the play button to toggle playing audio\n"
+                + "5. If you wish to switch between songs, click the forward or backward buttons\n"
+                + "6. If you wish to quit, either go to the file menu and click \"Exit\", or click the close window button.";
+            MessageBox.Show(message, "Help", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
         private void Play_Click(object sender, RoutedEventArgs e)
         {    
             music.streamSong(SongPlayer);
