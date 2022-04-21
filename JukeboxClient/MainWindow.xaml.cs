@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,12 +24,16 @@ namespace JukeboxClient
     {
         private MusicPlayer music = new MusicPlayer();
         private int songIndex = 0;
-
+        System.IO.DirectoryInfo di = null;
+        bool songsWereChanged = true;
 
         public MainWindow()
         {
             FixMenuAlignment();
             InitializeComponent();
+            string mydir = Directory.GetCurrentDirectory();
+            mydir = mydir.Replace(@"bin\Debug\net6.0-windows", "music");
+            di = new DirectoryInfo(mydir);
         }
 
         /**
@@ -64,37 +69,69 @@ namespace JukeboxClient
         private void HelpClick(object sender, RoutedEventArgs e)
         {
             string message = "1. Click the \"load songs\" button\n"
-                + "2. Click the next button to start the playlist queue\n"
-                + "3. Click the play button to start the music\n"
-                + "4. If you wish to pause the music, click the play button to toggle playing audio\n"
-                + "5. If you wish to switch between songs, click the forward or backward buttons\n"
-                + "6. If you wish to quit, either go to the file menu and click \"Exit\", or click the close window button.";
+                + "2. Click the play button to start the music\n"
+                + "3. If you wish to pause the music, click the play button to toggle playing audio\n"
+                + "4. If you wish to switch between songs, click the forward or backward buttons\n"
+                + "5. If you wish to quit, either go to the file menu and click \"Exit\", or click the close window button.";
             MessageBox.Show(message, "Help", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
-        {    
-            music.streamSong(SongPlayer);
+        {
+            if (music.isLoaded(SongPlayer) && songsWereChanged == false)
+            {
+                music.streamSong(SongPlayer);
+            }
+            else
+            {
+                music.incrementSong();
+                SongPlayer = music.loadSong(SongPlayer);
+                music.decrementSong();
+                SongPlayer = music.loadSong(SongPlayer);
+                music.streamSong(SongPlayer);
+                songsWereChanged = false;
+            }
         }
 
 
         private void Forward_Click(object sender, RoutedEventArgs e)
         {
-            music.incrementSong();
-            SongPlayer = music.loadSong(SongPlayer);
+            if (0 == di.GetFiles().Length)
+            {
+                MessageBox.Show("no files in music");
+            }
+            else
+            {
+                music.incrementSong();
+                SongPlayer = music.loadSong(SongPlayer);
+            }
         }
 
         private void Reverse_Click(object sender, RoutedEventArgs e)
         {
 
-            music.decrementSong();
-            SongPlayer = music.loadSong(SongPlayer);
+            if (0 == di.GetFiles().Length)
+            {
+                MessageBox.Show("no files in music");
+            }
+            else
+            {
+                music.decrementSong();
+                SongPlayer = music.loadSong(SongPlayer);
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+
             Network.GetPlaylist();
             Network.GetSongs();
+
+            songsWereChanged = true;
         }
 
         private void PlaylistGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

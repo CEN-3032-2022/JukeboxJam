@@ -21,8 +21,4 @@
     <Resource Include="play-buttton.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="music\" />
-  </ItemGroup>
-
 </Project>

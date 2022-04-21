@@ -22,6 +22,15 @@ namespace JukeboxClient
             return songPlayer;
         }
 
+        public bool isLoaded(MediaElement songPlayer)
+        {
+            if (songPlayer.Source == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public void streamSong(MediaElement songPlayer)
         {
             if (songPlayer.Source != null && false == isPlaying)
