@@ -37,14 +37,21 @@ namespace JukeboxClient
             hostUrl = hUrl;
         }
 
-        public static async Task GetPlaylist()
+        public static void GetPlaylist()
         {
             try
             {
-                // obtain the response from the server
+                // construct request message
                 string url = String.Concat(hostUrl, "getPlaylist");
-                var httpResponseMessage = await httpClient.GetAsync(url);
-                string jsonResponse = await httpResponseMessage.Content.ReadAsStringAsync();
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
+
+                // obtain the response from the server
+                var httpResponseMessage = httpClient.Send(request);
+                var respStream = httpResponseMessage.Content.ReadAsStream();
+                StreamReader reader = new StreamReader(respStream);
+                string? jsonResponse = reader.ReadToEnd();
+                Debug.WriteLine(jsonResponse);
+
 
                 // deserialize the json string obtained from server
                 List<Song>? songs = JsonConvert.DeserializeObject<List<Song>>(jsonResponse);
@@ -53,7 +60,7 @@ namespace JukeboxClient
                 if (songs != null)
                 {
                     AppData.playlist.Clear();
-                    foreach(Song song in songs)
+                    foreach (Song song in songs)
                     {
                         AppData.playlist.Add(song);
                     }
@@ -74,7 +81,7 @@ namespace JukeboxClient
          * that is not saved in the music folder,
          * this method will acquire the missing songs.
          */
-        public static async Task GetSongs()
+        public static async void GetSongs()
         {
             // setup the music path
             string songPath = AppDomain.CurrentDomain.BaseDirectory;
