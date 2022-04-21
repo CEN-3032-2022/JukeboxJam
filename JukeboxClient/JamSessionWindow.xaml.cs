@@ -34,10 +34,12 @@ namespace JukeboxClient
             {
 
                 address = "http://localhost:5078/";
+                MessageBox.Show(address);
             }
             else
             {
                 address = "http://" + hbt + ":" + ptb + "/";
+                MessageBox.Show(address);
             }
 
             Network.setHostUrl(address);
