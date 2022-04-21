@@ -15,22 +15,43 @@ namespace Jukebox.Controllers
             new Song
             {
                 Id = 0,
-                Title = "Acoustic Breeze",
-                Artist = "Bensound",
+                Title = "BetweenThePlanets",
+                Artist = "background",
                 Album = "Generic",
             },
             new Song
             {
                 Id = 1,
-                Title = "Ukulele",
-                Artist = "Bensound",
+                Title = "CloningLab",
+                Artist = "background",
                 Album = "Generic",
             },
             new Song
             {
                 Id = 2,
-                Title = "All that",
-                Artist = "Bensound",
+                Title = "Distance",
+                Artist = "background",
+                Album = "Generic",
+            },
+            new Song
+            {
+                Id = 3,
+                Title = "DisturbanceInTheTemple",
+                Artist = "background",
+                Album = "Generic",
+            },
+            new Song
+            {
+                Id = 4,
+                Title = "HeroesReturn",
+                Artist = "background",
+                Album = "Generic",
+            },
+            new Song
+            {
+                Id = 5,
+                Title = "ItsDarkInHere",
+                Artist = "background",
                 Album = "Generic",
             },
 
