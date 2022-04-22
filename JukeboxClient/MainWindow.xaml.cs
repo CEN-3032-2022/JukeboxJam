@@ -82,6 +82,11 @@ namespace JukeboxClient
             {
                 music.streamSong(SongPlayer);
             }
+            else if (0 == di.GetFiles().Length)
+            {
+                AppData.playlist.Clear();
+                MessageBox.Show("no files in music");
+            }
             else
             {
                 music.incrementSong();
@@ -98,6 +103,7 @@ namespace JukeboxClient
         {
             if (0 == di.GetFiles().Length)
             {
+                AppData.playlist.Clear();
                 MessageBox.Show("no files in music");
             }
             else
@@ -112,6 +118,7 @@ namespace JukeboxClient
 
             if (0 == di.GetFiles().Length)
             {
+                AppData.playlist.Clear();
                 MessageBox.Show("no files in music");
             }
             else
