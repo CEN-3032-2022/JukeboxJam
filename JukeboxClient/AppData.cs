@@ -13,9 +13,11 @@ namespace JukeboxClient
     public static class AppData
     {
         public static ObservableCollection<Song> playlist;
+        public static RoomState roomState;
 
         static AppData()
         {
+            roomState = new RoomState();
             playlist = new ObservableCollection<Song>();
         }
     }

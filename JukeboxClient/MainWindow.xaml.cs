@@ -138,5 +138,17 @@ namespace JukeboxClient
         {
             Debug.WriteLine(PlaylistGrid.SelectedIndex);
         }
+
+        private void Send_Button(object sender, RoutedEventArgs e)
+        {
+            AppData.roomState.Position = SongPlayer.Position;
+            Network.PostRoomState();
+        }
+
+        private void Recieve_Button(object sender, RoutedEventArgs e)
+        {
+            Network.GetRoomState();
+            MessageBox.Show(AppData.roomState.Position.ToString());
+        }
     }
 }

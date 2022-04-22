@@ -17,7 +17,7 @@
                 <MenuItem x:Name="Help" Header="View instructions" Click="HelpClick"/>
             </MenuItem>
         </Menu>
-        <DockPanel HorizontalAlignment="Center" Height="55" Margin="0,369,0,0" Width="182" LastChildFill="False">
+        <DockPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="55" Margin="0,0,0,10" Width="182" LastChildFill="False">
             <Button x:Name="Reverse" FontSize="18" FontWeight="Normal" BorderBrush="{x:Null}" Width="70" DockPanel.Dock="Left" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="Reverse_Click">
                 <Button.RenderTransform>
                     <TransformGroup>
@@ -45,7 +45,9 @@
         </DockPanel>
         <DataGrid IsReadOnly="True" x:Name="PlaylistGrid" ColumnWidth="*" ItemsSource="{Binding Source={x:Static local:AppData.playlist}}" Margin="20,35,20,141" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFBEBBBB" VerticalGridLinesBrush="#FFBEBBBB" RowHeaderWidth="0" SelectionMode="Single" SelectionChanged="PlaylistGrid_SelectionChanged"/>
         <MediaElement x:Name="SongPlayer" HorizontalAlignment="Left" Height="30" Margin="45,368,0,0" VerticalAlignment="Top" Width="26"/>
-        <Button x:Name="Download" Content="Download Songs" HorizontalAlignment="Center" Margin="0,364,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.439,-0.048" Click="Button_Click"/>
+        <Button x:Name="Download" Content="Download Songs" VerticalAlignment="Bottom" Margin="0,0,0,100" Click="Button_Click" Width="100"/>
+        <Button Content="send" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,76" Click="Send_Button"/>
+        <Button Content="recieve" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,100,76" Click="Recieve_Button"/>
 
 
     </Grid>
