@@ -30,6 +30,7 @@ namespace JukeboxClient
         DispatcherTimer timer = new DispatcherTimer();
         public bool IsPlaying { get; set; }
         bool isDragging = false;
+        int songState = 0;
 
         public MainWindow()
         {
@@ -106,15 +107,22 @@ namespace JukeboxClient
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
+            Handle_PlayButton();
+        }
+
+        private void Handle_PlayButton()
+        {
             if (music.isLoaded(SongPlayer) && songsWereChanged == false)
             {
                 music.streamSong(SongPlayer);
                 music.setSongPosition(SongPlayer, TimeSpan.FromSeconds(MusicSlider.Value));
+                ToggleSongState();
             }
             else if (0 == di.GetFiles().Length)
             {
                 AppData.playlist.Clear();
                 MessageBox.Show("No files in music folder!");
+                songState = 0;
             }
             else
             {
@@ -124,6 +132,7 @@ namespace JukeboxClient
                 SongPlayer = music.loadSong(SongPlayer);
                 music.streamSong(SongPlayer);
                 songsWereChanged = false;
+                songState = 1;
                 UpdatePlaylistSelection();
             }
 
@@ -191,6 +200,7 @@ namespace JukeboxClient
         {
             AppData.roomState.Position = SongPlayer.Position;
             AppData.roomState.SongIndex = music.getSongIndex();
+            AppData.roomState.SongState = songState;
             Network.PostRoomState();
         }
 
@@ -200,9 +210,15 @@ namespace JukeboxClient
             {
                 Network.GetRoomState();
                 music.setSongIndex(AppData.roomState.SongIndex);
-                SongPlayer.Position = AppData.roomState.Position;
                 PlaylistGrid.SelectedIndex = music.getSongIndex();
                 SongPlayer = music.loadSong(SongPlayer);
+                SongPlayer.Position = AppData.roomState.Position;
+                MusicSlider.Value = AppData.roomState.Position.TotalSeconds;
+                
+                if (songState != AppData.roomState.SongState)
+                {
+                    Handle_PlayButton();
+                }
             } catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
@@ -255,6 +271,17 @@ namespace JukeboxClient
         {
             SongPlayer.Position = TimeSpan.FromSeconds(0);
             MusicSlider.Value = 0;
+        }
+        private void ToggleSongState()
+        {
+            if (songState == 0)
+            {
+                songState = 1;
+            }
+            else
+            {
+                songState = 0;
+            }
         }
     }
 }
