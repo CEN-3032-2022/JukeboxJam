@@ -102,7 +102,10 @@ namespace JukeboxClient
                 SongPlayer = music.loadSong(SongPlayer);
                 music.streamSong(SongPlayer);
                 songsWereChanged = false;
+                UpdatePlaylistSelection();
             }
+
+            SwapPlayPause();
         }
 
 
@@ -117,6 +120,7 @@ namespace JukeboxClient
             {
                 music.incrementSong();
                 SongPlayer = music.loadSong(SongPlayer);
+                UpdatePlaylistSelection();
             }
         }
 
@@ -132,6 +136,7 @@ namespace JukeboxClient
             {
                 music.decrementSong();
                 SongPlayer = music.loadSong(SongPlayer);
+                UpdatePlaylistSelection();
             }
         }
 
@@ -151,6 +156,13 @@ namespace JukeboxClient
         private void PlaylistGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Debug.WriteLine(PlaylistGrid.SelectedIndex);
+            music.setSongIndex(PlaylistGrid.SelectedIndex);
+            SongPlayer = music.loadSong(SongPlayer);
+        }
+
+        private void UpdatePlaylistSelection()
+        {
+            PlaylistGrid.SelectedIndex = music.getSongIndex();
         }
 
         private void Send_Button(object sender, RoutedEventArgs e)
@@ -163,6 +175,24 @@ namespace JukeboxClient
         {
             Network.GetRoomState();
             MessageBox.Show(AppData.roomState.Position.ToString());
+        }
+
+        private void SwapPlayPause()
+        {
+            string mydir = Directory.GetCurrentDirectory();
+            mydir = mydir.Replace(@"bin\Debug\net6.0-windows", "");
+
+            var brush = new ImageBrush();
+            if (music.getIsPlaying())
+            {
+                brush.ImageSource = new BitmapImage(new Uri($"{mydir}\\pause-button.png", UriKind.Absolute));
+            } 
+            else
+            {
+                brush.ImageSource = new BitmapImage(new Uri($"{mydir}\\play-button.png", UriKind.Absolute));
+            }
+
+            Play.Background = brush;
         }
     }
 }

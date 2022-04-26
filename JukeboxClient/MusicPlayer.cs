@@ -65,5 +65,20 @@ namespace JukeboxClient
             }
             return songIndex;
         }
+
+        public int getSongIndex()
+        {
+            return songIndex;
+        }
+
+        public void setSongIndex(int songIndex)
+        {
+            this.songIndex = songIndex;
+        }
+
+        public bool getIsPlaying()
+        {
+            return isPlaying;
+        }
     }
 }

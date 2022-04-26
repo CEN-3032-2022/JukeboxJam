@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="forward.png" />
+    <None Remove="play-button.png" />
     <None Remove="play-buttton.png" />
   </ItemGroup>
 
@@ -18,7 +19,7 @@
 
   <ItemGroup>
     <Resource Include="forward.png" />
-    <Resource Include="play-buttton.png" />
+    <Resource Include="play-button.png" />
   </ItemGroup>
 
 </Project>
