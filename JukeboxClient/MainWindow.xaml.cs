@@ -51,7 +51,7 @@ namespace JukeboxClient
             timer.Interval = TimeSpan.FromMilliseconds(200);
             timer.Tick += new EventHandler(timer_Tick);
 
-            // Set an icon using code
+            // Set an icon
             Uri iconUri = new Uri(di.Parent.FullName + @"\jukebox.png", UriKind.Absolute);
             this.Icon = BitmapFrame.Create(iconUri);
         }
@@ -176,7 +176,6 @@ namespace JukeboxClient
 
         private void PlaylistGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Debug.WriteLine(PlaylistGrid.SelectedIndex);
             music.setSongIndex(PlaylistGrid.SelectedIndex);
             SongPlayer = music.loadSong(SongPlayer);
         }
@@ -189,13 +188,24 @@ namespace JukeboxClient
         private void Send_Button(object sender, RoutedEventArgs e)
         {
             AppData.roomState.Position = SongPlayer.Position;
+            AppData.roomState.SongIndex = music.getSongIndex();
             Network.PostRoomState();
         }
 
         private void Recieve_Button(object sender, RoutedEventArgs e)
         {
-            Network.GetRoomState();
-            MessageBox.Show(AppData.roomState.Position.ToString());
+            try
+            {
+                Network.GetRoomState();
+                music.setSongIndex(AppData.roomState.SongIndex);
+                SongPlayer.Position = AppData.roomState.Position;
+                PlaylistGrid.SelectedIndex = music.getSongIndex();
+                SongPlayer = music.loadSong(SongPlayer);
+            } catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+             
         }
 
         private void SwapPlayPause()
