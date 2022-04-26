@@ -58,7 +58,7 @@ namespace JukeboxClient
 
         private void timer_Tick(object? sender, EventArgs e)
         {
-            if (!isDragging)
+            if (!isDragging && music.getIsPlaying() == true)
             {
                 MusicSlider.Value = SongPlayer.Position.TotalSeconds;
             }
@@ -109,6 +109,7 @@ namespace JukeboxClient
             if (music.isLoaded(SongPlayer) && songsWereChanged == false)
             {
                 music.streamSong(SongPlayer);
+                music.setSongPosition(SongPlayer, TimeSpan.FromSeconds(MusicSlider.Value));
             }
             else if (0 == di.GetFiles().Length)
             {
@@ -143,11 +144,11 @@ namespace JukeboxClient
                 SongPlayer = music.loadSong(SongPlayer);
                 UpdatePlaylistSelection();
             }
+            ResetSongPosition();
         }
 
         private void Reverse_Click(object sender, RoutedEventArgs e)
         {
-
             if (0 == di.GetFiles().Length)
             {
                 AppData.playlist.Clear();
@@ -159,6 +160,7 @@ namespace JukeboxClient
                 SongPlayer = music.loadSong(SongPlayer);
                 UpdatePlaylistSelection();
             }
+            ResetSongPosition();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -247,6 +249,12 @@ namespace JukeboxClient
         private void MusicSlider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
         {
             isDragging = true;
+        }
+
+        private void ResetSongPosition ()
+        {
+            SongPlayer.Position = TimeSpan.FromSeconds(0);
+            MusicSlider.Value = 0;
         }
     }
 }

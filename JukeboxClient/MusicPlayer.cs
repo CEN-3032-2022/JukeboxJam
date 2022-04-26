@@ -76,6 +76,11 @@ namespace JukeboxClient
             this.songIndex = songIndex;
         }
 
+        public void setSongPosition(MediaElement songPlayer, TimeSpan t)
+        {
+            songPlayer.Position = t;
+        }
+
         public bool getIsPlaying()
         {
             return isPlaying;
