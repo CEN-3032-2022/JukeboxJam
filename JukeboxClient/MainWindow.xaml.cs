@@ -50,6 +50,10 @@ namespace JukeboxClient
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(200);
             timer.Tick += new EventHandler(timer_Tick);
+
+            // Set an icon using code
+            Uri iconUri = new Uri(di.Parent.FullName + @"\jukebox.png", UriKind.Absolute);
+            this.Icon = BitmapFrame.Create(iconUri);
         }
 
         private void timer_Tick(object? sender, EventArgs e)
