@@ -25,9 +25,11 @@ namespace JukeboxClient
     {
         private MusicPlayer music = new MusicPlayer();
         private int songIndex = 0;
-        System.IO.DirectoryInfo di = null;
+        DirectoryInfo di = null;
         bool songsWereChanged = true;
-        
+        DispatcherTimer timer = new DispatcherTimer();
+        public bool IsPlaying { get; set; }
+        bool isDragging = false;
 
         public MainWindow()
         {
@@ -42,6 +44,20 @@ namespace JukeboxClient
             }
 
             di = new DirectoryInfo(mydir);
+
+            // setup dispatch timer
+            IsPlaying = false;
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(200);
+            timer.Tick += new EventHandler(timer_Tick);
+        }
+
+        private void timer_Tick(object? sender, EventArgs e)
+        {
+            if (!isDragging)
+            {
+                MusicSlider.Value = SongPlayer.Position.TotalSeconds;
+            }
         }
 
         /**
@@ -177,6 +193,7 @@ namespace JukeboxClient
             Network.GetRoomState();
             MessageBox.Show(AppData.roomState.Position.ToString());
         }
+
         private void SwapPlayPause()
         {
             string mydir = Directory.GetCurrentDirectory();
@@ -193,6 +210,29 @@ namespace JukeboxClient
             }
 
             Play.Background = brush;
+        }
+
+        private void SongPlayer_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            if (SongPlayer.NaturalDuration.HasTimeSpan)
+            {
+                TimeSpan ts = SongPlayer.NaturalDuration.TimeSpan;
+                MusicSlider.Maximum = ts.TotalSeconds;
+                MusicSlider.SmallChange = 1;
+                MusicSlider.LargeChange = Math.Min(10, ts.Seconds / 10);
+            }
+            timer.Start();
+        }
+
+        private void MusicSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            isDragging = false;
+            SongPlayer.Position = TimeSpan.FromSeconds(MusicSlider.Value);
+        }
+
+        private void MusicSlider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            isDragging = true;
         }
     }
 }

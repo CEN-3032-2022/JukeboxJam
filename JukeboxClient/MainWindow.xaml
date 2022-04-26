@@ -25,6 +25,7 @@
             <Button x:Name="Download" Content="Download Songs" Click="Button_Click" Height="30" Width="122" FlowDirection="LeftToRight" Padding="0,0,0,0" UseLayoutRounding="False" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="179" Canvas.Top="389" Margin="5,0,5,0"/>
             <Button Content="Receive" Click="Recieve_Button" Height="30" Width="54" Canvas.Left="120" Canvas.Top="388"/>
         </DockPanel>
+        <Slider x:Name="MusicSlider" Width="240" Margin="0,15,0,0" Thumb.DragStarted="MusicSlider_DragStarted" Thumb.DragCompleted="MusicSlider_DragCompleted"/>
         <DockPanel LastChildFill="False" HorizontalAlignment="Center" Margin="1,15,0,0">
             <Button x:Name="Reverse" FontSize="18" FontWeight="Normal" BorderBrush="{x:Null}" Width="40" DockPanel.Dock="Left" RenderTransformOrigin="0.5,0.5" Click="Reverse_Click" Height="40" Margin="0,0,3,0">
                 <Button.RenderTransform>
@@ -50,6 +51,6 @@
                 </Button.Background>
             </Button>
         </DockPanel>
-        <MediaElement x:Name="SongPlayer" HorizontalAlignment="Left" Height="30" Margin="10,487,0,0" VerticalAlignment="Top" Width="23"/>
+        <MediaElement x:Name="SongPlayer" HorizontalAlignment="Left" Height="30" Margin="10,487,0,0" VerticalAlignment="Top" Width="23" MediaOpened="SongPlayer_MediaOpened"/>
     </StackPanel>
 </Window>
