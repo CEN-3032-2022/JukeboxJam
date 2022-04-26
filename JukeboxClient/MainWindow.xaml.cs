@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace JukeboxClient
 {
@@ -26,6 +27,7 @@ namespace JukeboxClient
         private int songIndex = 0;
         System.IO.DirectoryInfo di = null;
         bool songsWereChanged = true;
+        
 
         public MainWindow()
         {
@@ -40,7 +42,6 @@ namespace JukeboxClient
             }
 
             di = new DirectoryInfo(mydir);
-            
         }
 
         /**
@@ -176,7 +177,6 @@ namespace JukeboxClient
             Network.GetRoomState();
             MessageBox.Show(AppData.roomState.Position.ToString());
         }
-
         private void SwapPlayPause()
         {
             string mydir = Directory.GetCurrentDirectory();
