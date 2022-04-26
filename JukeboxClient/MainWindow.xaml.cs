@@ -33,7 +33,14 @@ namespace JukeboxClient
             InitializeComponent();
             string mydir = Directory.GetCurrentDirectory();
             mydir = mydir.Replace(@"bin\Debug\net6.0-windows", "music");
+
+            if (!Directory.Exists(mydir))
+            {
+                Directory.CreateDirectory(mydir);
+            }
+
             di = new DirectoryInfo(mydir);
+            
         }
 
         /**
@@ -85,7 +92,7 @@ namespace JukeboxClient
             else if (0 == di.GetFiles().Length)
             {
                 AppData.playlist.Clear();
-                MessageBox.Show("no files in music");
+                MessageBox.Show("No files in music folder!");
             }
             else
             {
